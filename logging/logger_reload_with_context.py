@@ -12,7 +12,11 @@ class ContextLogger(object):
     def _context(self):
         stack = traceback.extract_stack()
         (filename, line, procname, text) = stack[-3]
-        return '  [loc] ' + filename + ':' + procname + ':' + str(line)
+        print(stack)
+
+        steps = [mod + ':' + str(line) + ':' + ctx for _, line, mod, ctx in stack[:-3]]
+        stack = '>>'.join(steps)
+        return '  [loc] ' + filename + ':' + procname + ':' + str(line) + '  [stk] ' + stack
 
     def critical(self, msg):
         self.logger.critical('[msg] ' + str(msg) + self._context())
@@ -34,6 +38,17 @@ logger = ContextLogger('root')  # logging.getLogger('test')
 
 
 class A(object):
+    def t1(self):
+        self.t2('hello')
+
+    def t2(self, text):
+        print(text)
+        self.t3('world')
+
+    def t3(self, text):
+        print(text)
+        self.test()
+
     def test(self):
         try:
             raise Exception('WTF!')
@@ -42,4 +57,4 @@ class A(object):
 
 
 a = A()
-a.test()
+a.t1()
