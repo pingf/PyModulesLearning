@@ -1,7 +1,7 @@
 import pycurl
 
 c = pycurl.Curl()
-c.setopt(c.URL, 'http://127.0.0.1:5000/')
+c.setopt(c.URL, 'http://127.0.0.1:5000/upload_post')
 c.setopt(c.HTTPPOST, [
     ('fileupload', (
         # upload the contents of this file
